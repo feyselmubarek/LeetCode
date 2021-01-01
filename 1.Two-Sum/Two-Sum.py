@@ -1,3 +1,8 @@
+# # link : https://leetcode.com/problems/two-sum/
+# 
+# Time complexity : O(N), where N is size of the given list of numbers
+# Space cimplexity : O(N), where N is size of the given list of numbers#
+
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
         positions = {}
