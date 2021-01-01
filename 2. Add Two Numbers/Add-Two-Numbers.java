@@ -1,7 +1,7 @@
 /** 
  * link : https://leetcode.com/problems/add-two-numbers/
  * 
- * Time complexity : O(N + M), where N and M are size of the gven linked lists
+ * Time complexity : O(N + M), where N and M are size of the given linked lists
  * Space cimplexity : O(N), where N is size of linkedList (the returned value)
 */
 
