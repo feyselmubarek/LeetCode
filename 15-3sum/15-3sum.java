@@ -1,30 +1,29 @@
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
         List<List<Integer>> triplets = new ArrayList<>();
-        HashSet<Integer> first = new HashSet<>();
         Arrays.sort(nums);
+        int n = nums.length, last = (int) -1e5 - 10;
         
-        for(int i = 0; i < nums.length; i++){
-            if(first.contains(nums[i])) 
+        for(int i = 0; i < n; i++){
+            if(nums[i] == last) 
                 continue;
             
-            first.add(nums[i]);
+            last = nums[i];
             int sum = 0 - nums[i];
-            int lo = i + 1, hi = nums.length - 1;
-            
-            HashSet<Integer> second = new HashSet<>();
+            int lo = i + 1, hi = n - 1;  
+            int low = nums[0] - 1, high = nums[n - 1] + 1;
             
             while(lo < hi){
                 int maybe = nums[lo] + nums[hi];
                 
-                if(second.contains(nums[lo]) || maybe < sum){
+                if(maybe < sum || nums[lo] == low){
                     lo++;
-                }else if(second.contains(nums[hi]) || maybe > sum){
+                }else if(maybe > sum || nums[hi] == high){
                     hi--;
-                }else {
-                    List<Integer> triple = new ArrayList<>(Arrays.asList(nums[i], nums[lo], nums[hi]));
-                    second.addAll(Arrays.asList(nums[lo], nums[hi]));
-                    triplets.add(triple);
+                }else {                    
+                    triplets.add(new ArrayList<>(Arrays.asList(nums[i], nums[lo], nums[hi])));
+                    low = nums[lo];
+                    high = nums[hi];
                 }
             }
         }
