@@ -1,12 +1,8 @@
 class Solution {
     public List<List<Integer>> fourSum(int[] nums, int target) {        
-        int n = nums.length, MIN = (int) -1e9 + 7;
-        Arrays.sort(nums);        
         List<List<Integer>> quadruplets = new ArrayList<>();
-        HashMap<Integer, Integer> indices = new HashMap<>();
-        
-        for(int i = 0; i < n; i++) 
-            indices.put(nums[i], i);
+        int n = nums.length, MIN = (int) -1e9 + 7;
+        Arrays.sort(nums);                
         
         int first = MIN;
         for(int i = 0; i < n; i++){
@@ -19,23 +15,25 @@ class Solution {
                 if(second == nums[j])
                     continue;
                 second = nums[j];
-                int third = MIN;
                 
-                for(int k = j + 1; k < n; k++){
-                    if(nums[k] == third)
-                        continue;
-                    third = nums[k];
-                    
-                    int find = target - (nums[i] + nums[j] + nums[k]);
-                    int index = indices.getOrDefault(find, -1);
-                    if(index > k){
-                        List<Integer> quad = new ArrayList<>(Arrays.asList(nums[i], nums[j], nums[k], nums[index]));
-                        quadruplets.add(quad);
+                int sum = target - (nums[i] + nums[j]);
+                int l = j + 1, h = n - 1;
+                int low = MIN, high = nums[h] + 1;
+                
+                while(l < h){
+                    int maybe = nums[l] + nums[h];
+                    if(maybe < sum || nums[l] == low){
+                        l++;
+                    }else if(maybe > sum || nums[h] == high){
+                        h--;
+                    }else{
+                        quadruplets.add(new ArrayList<>(Arrays.asList(nums[i], nums[j], nums[l], nums[h])));
+                        low = nums[l];
+                        high = nums[h];
                     }
                 }
             }
         }
-        
              
         return quadruplets;
     }
