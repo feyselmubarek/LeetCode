@@ -1,42 +1,37 @@
 class Solution {
     public int maximumGap(int[] nums) {
-        int n = nums.length;
-        int[][] arr = new int[n][2];
+        int n = nums.length, pow = 1, max = 0;
+        for(int num : nums)
+            max = Math.max(max, num);
         
-        for(int i = 0; i < n; i++){
-            arr[i] = new int[]{nums[i], nums[i]};
-        }
         
-        boolean sorted = false;
-        ArrayList<Pair<Integer, Integer>>[] count = new ArrayList[10];
-        while(!sorted){
-            sorted = true;
-            for(int i = 0; i < 10; i++){
-                count[i] = new ArrayList<>();
-            }
-            
+        while(max / pow > 0){
+            int[] aux = new int[n];
+            int[] count = new int[10];
             for(int i = 0; i < n; i++){
-                int digit = arr[i][0] % 10;
-                count[digit].add(new Pair<>(arr[i][0]/10, arr[i][1]));
-                if(arr[i][0]/10 != 0){
-                    sorted = false;
-                }
+                int digit = (nums[i] / pow) % 10;
+                count[digit]++;
             }
             
-            int idx = 0;
-            for(int i = 0; i < 10; i++){
-                for(Pair<Integer, Integer> p : count[i]){
-                    arr[idx] = new int[]{p.getKey(), p.getValue()};
-                    idx++;
-                }
+            for(int i = 1; i < 10; i++){
+                count[i] += count[i - 1];
             }
+            
+            
+            for(int i = n - 1; i >= 0; i--){
+                int digit = (nums[i] / pow) % 10;
+                int idx = count[digit] = count[digit] - 1;
+                aux[idx] = nums[i];
+            }
+            
+            nums = aux;
+            pow *= 10;
         }
         
-        int max = 0;
-        for(int i = 0; i < n - 1; i++){
-            max = Math.max(max, arr[i + 1][1] - arr[i][1]);
-        }
+        int maxDiff = 0;
+        for(int i = 0; i < n - 1; i++)
+            maxDiff = Math.max(maxDiff, nums[i + 1] - nums[i]);
         
-        return max;
+        return maxDiff;
     }
 }
