@@ -4,11 +4,14 @@ class Solution {
         for(char[] row : chess) Arrays.fill(row, '.');
         
         List<List<String>> ans = new ArrayList<>();
-        putQueen(0, n, chess, ans, new int[n][n]);
+        HashSet<Integer> plusDiagonal = new HashSet<>();
+        HashSet<Integer> minusDiagonal = new HashSet<>();
+        HashSet<Integer> columns = new HashSet<>();
+        putQueen(0, n, chess, ans, plusDiagonal, minusDiagonal, columns);
         return ans;
     }
     
-    public void putQueen(int row, int n, char[][] chess, List<List<String>> ans, int[][] blocked){
+    public void putQueen(int row, int n, char[][] chess, List<List<String>> ans, HashSet<Integer> plusDiagonal, HashSet<Integer> minusDiagonal, HashSet<Integer> columns){
         if(row == n){
             List<String> possible = new ArrayList<>();
             for(char[] r : chess){
@@ -18,32 +21,19 @@ class Solution {
             return;
         }
         
-        int[][] directions = {{1,0}, {1,1}, {1,-1}};
-        
         for(int col = 0; col < n; col++){
-            if(blocked[row][col] == 0){
+            if(!plusDiagonal.contains(row + col) && !minusDiagonal.contains(row - col) && !columns.contains(col)){
+                plusDiagonal.add(row + col);
+                minusDiagonal.add(row - col);
+                columns.add(col);
                 
-                chess[row][col] = 'Q'; 
-                for(int[] d : directions){
-                    int _r = row + d[0], _c = col + d[1];                    
-                    while(_r >= 0 && _r < n && _c < n && _c >= 0){
-                        blocked[_r][_c]++;
-                        _r += d[0];
-                        _c += d[1];
-                    }
-                 }
-                
-                putQueen(row + 1, n, chess, ans, blocked);
-                
+                chess[row][col] = 'Q';                 
+                putQueen(row + 1, n, chess, ans, plusDiagonal, minusDiagonal, columns);
                 chess[row][col] = '.';
-                for(int[] d : directions){
-                    int _r = row + d[0], _c = col + d[1];                    
-                    while(_r >= 0 && _r < n && _c < n && _c >= 0){
-                        blocked[_r][_c]--;
-                        _r += d[0];
-                        _c += d[1];
-                    }
-                }
+                
+                plusDiagonal.remove(row + col);
+                minusDiagonal.remove(row - col);
+                columns.remove(col);
             }
         }
     }
