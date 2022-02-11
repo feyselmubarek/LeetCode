@@ -1,18 +1,9 @@
 class Solution(object):
     def minCostClimbingStairs(self, cost):
-        memo = [-1] * len(cost)
-        self.dfs(cost, 0, memo)
-        return min(memo[0], memo[1])
-        
-    def dfs(self, cost, idx, memo):
-        if idx >= len(cost):
-            return 0
-    
-        if memo[idx] != -1:
-            return memo[idx]
-        
-        memo[idx] = cost[idx] + min(self.dfs(cost, idx + 1, memo), self.dfs(cost, idx + 2, memo))
-        return memo[idx]
-        
-        
-        
+        dp = [0] * len(cost)
+        for idx in range(len(cost) - 1, -1, -1):
+            maybe_1 = dp[idx + 1] if idx + 1 < len(cost) else 0
+            maybe_2 = dp[idx + 2] if idx + 2 < len(cost) else 0
+            dp[idx] = cost[idx] + min(maybe_1, maybe_2)
+        return min(dp[0], dp[1])
+             
