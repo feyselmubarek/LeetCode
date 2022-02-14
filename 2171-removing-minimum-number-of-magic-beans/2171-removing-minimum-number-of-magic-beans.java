@@ -4,14 +4,10 @@ class Solution {
         long sum = 0;
         for(int bean : beans) sum += (long) bean;
             
-        long min = sum;
-        long removed = 0;
-        
+        long min = sum;        
         for(int i = 0; i < beans.length; i++){
-            long bean = beans[i];
             int size = beans.length - i;
-            long rm = sum - (bean * size);
-            min = Math.min(min, rm);
+            min = Math.min(min, sum - ((long) beans[i] * size));
         }
         
         return min;
