@@ -73,15 +73,11 @@ class Solution
         }
     }
 
-    public void insert(int[] arr, int element, int i){
+    public void insert(int[] arr, int element, int i) {
         arr[i] = element;
-        while(i > 0){
-            int p = parent(i);
-            if(arr[i] <= arr[p]){
-                break;
-            }
-            swap(arr, i, p);
-            i = p;
+        while (i > 0 && arr[i] > arr[parent(i)]) {
+            swap(arr, i, parent(i));
+            i = parent(i);
         }
     }
 
