@@ -36,13 +36,11 @@ class Heap_Sort
 
 class Solution
 {
-    int[] minHeap;
     // Function to build a Heap from array.
     void buildHeap(int arr[], int n) {
         // Your code here
-        minHeap = new int[n];
         for(int idx = 0; idx < n; idx++){
-            insert(minHeap, arr[idx], idx);
+            insert(arr, arr[idx], idx);
         }
     }
 
@@ -53,10 +51,10 @@ class Solution
             int l = leftChild(i);
             int r = rightChild(i);
 
-            if(r < n && arr[r] < arr[l] && arr[r] < arr[i]){
+            if(r < n && arr[r] > arr[l] && arr[r] > arr[i]){
                 swap(arr, r, i);
                 i = r;
-            }else if(l < n && arr[l] < arr[i]){
+            }else if(l < n && arr[l] > arr[i]){
                 swap(arr, i, l);
                 i = l;
             }else{
@@ -70,9 +68,8 @@ class Solution
     public void heapSort(int arr[], int n) {
         // code here
         buildHeap(arr, n);
-        int[] sorted = new int[n];
-        for (int i = 0; i < n; i++) {
-            arr[i] = remove(minHeap, n - i - 1);
+        for (int i = n - 1; i >= 0; i--) {
+            arr[i] = remove(arr, i);
         }
     }
 
@@ -80,7 +77,7 @@ class Solution
         arr[i] = element;
         while(i > 0){
             int p = parent(i);
-            if(arr[i] >= arr[p]){
+            if(arr[i] <= arr[p]){
                 break;
             }
             swap(arr, i, p);
@@ -89,10 +86,10 @@ class Solution
     }
 
     public int remove(int[] arr, int i){
-        int min = arr[0];
+        int max = arr[0];
         swap(arr, i, 0);
         heapify(arr, i, 0);
-        return min;
+        return max;
     }
 
     public void swap(int[] arr, int i, int j){
