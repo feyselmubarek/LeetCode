@@ -11,7 +11,7 @@ class Solution {
             long num = minHeap.poll();
             
             for(int m : multiply){
-                if(!seen.contains(num * m)){
+                if(!seen.contains(num * m) && num < Integer.MAX_VALUE){
                     seen.add(num * m);
                     minHeap.add(num * m);
                 }
