@@ -10,7 +10,7 @@ class Solution {
             int divisor = left + (right - left) / 2;
             int sum = 0;
             for(int num : nums){
-                sum += divide(num, divisor);
+                sum += (num / divisor) + Math.min(1, num % divisor);
             }
             
             if(sum <= threshold){
@@ -22,9 +22,5 @@ class Solution {
         }
         
         return best;
-    }
-    
-    int divide(int num, int divisor){
-        return (num / divisor) + Math.min(1, num % divisor);
     }
 }
