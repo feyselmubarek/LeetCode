@@ -4,9 +4,9 @@ class Solution {
         String[] revFromV2 = version2.split("[.]");
         
         int i = 0, j = 0, n = revFromV1.length, m = revFromV2.length;
-        while(i < n && j < m){
-            int rev1 = Integer.parseInt(revFromV1[i]);
-            int rev2 = Integer.parseInt(revFromV2[j]);
+        while(i < n || j < m){
+            int rev1 = i < n ? Integer.parseInt(revFromV1[i]): 0;
+            int rev2 = j < m ? Integer.parseInt(revFromV2[j]) : 0;
             
             if(rev1 != rev2){
                 return rev1 < rev2 ? -1 : 1;
@@ -14,18 +14,6 @@ class Solution {
             
             i++;
             j++;
-        }
-        
-        while(i < n){
-            if(Integer.parseInt(revFromV1[i++]) > 0){
-                return 1;
-            }
-        }
-        
-        while(j < m){
-            if(Integer.parseInt(revFromV2[j++]) > 0){
-                return -1;
-            }
         }
         
         return 0;
