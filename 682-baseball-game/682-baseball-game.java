@@ -4,8 +4,7 @@ class Solution {
         for(String op : ops){
             if(op.equals("+")){
                 int a = stack.pop();
-                int b = stack.pop();
-                stack.push(b);
+                int b = stack.peek();
                 stack.push(a);
                 stack.push(a + b);
             }else if(op.equals("C")){
