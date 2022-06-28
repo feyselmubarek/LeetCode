@@ -1,40 +1,74 @@
 class Solution {
-    public List<Integer> findSubstring(String s, String[] words) {
-        HashMap<String, Integer> map = new HashMap<>();
-        for (String word : words) {
-            map.put(word, map.getOrDefault(word, 0) + 1);
-        }
+    private HashMap<String, Integer> wordCount = new HashMap<String, Integer>();
+    private int n;
+    private int wordLength;
+    private int substringSize;
+    private int k;
+    
+    private void slidingWindow(int left, String s, List<Integer> answer) {
+        HashMap<String, Integer> wordsFound = new HashMap<>();
+        int wordsUsed = 0;
+        boolean excessWord = false;
+        
+        // Do the same iteration pattern as the previous approach - iterate
+        // word_length at a time, and at each iteration we focus on one word
+        for (int right = left; right <= n - wordLength; right += wordLength) {
+            
+            String sub = s.substring(right, right + wordLength);
+            if (!wordCount.containsKey(sub)) {
+                // Mismatched word - reset the window
+                wordsFound.clear();
+                wordsUsed = 0;
+                excessWord = false;
+                left = right + wordLength;
+            } else {
+                // If we reached max window size or have an excess word
+                while (right - left == substringSize || excessWord) {
+                    String leftmostWord = s.substring(left, left + wordLength);
+                    left += wordLength;
+                    wordsFound.put(leftmostWord, wordsFound.get(leftmostWord) - 1);
 
-        HashMap<Integer, String> wordFromIdx = new HashMap<>();
-        int len = words[0].length();
-        for (int idx = 0; idx + len <= s.length(); idx++) {
-            String maybe = s.substring(idx, idx + len);
-            if (map.containsKey(maybe)) {
-                wordFromIdx.put(idx, maybe);
-            }
-        }
-
-        List<Integer> ans = new ArrayList<>();
-        for (int idx = 0; idx < s.length(); idx++) {
-            HashMap<String, Integer> _map = new HashMap<>();
-            int itr = idx, usedWords = 0;
-
-            while (itr + len <= s.length()) {
-                String maybe = wordFromIdx.getOrDefault(itr, "");
-                if (_map.getOrDefault(maybe, 0) >= map.getOrDefault(maybe, 0)) {
-                    break;
+                    if (wordsFound.get(leftmostWord) >= wordCount.get(leftmostWord)) {
+                        // This word was an excess word
+                        excessWord = false;
+                    } else {
+                        // Otherwise we actually needed it
+                        wordsUsed--;
+                    }
                 }
-
-                _map.put(maybe, _map.getOrDefault(maybe, 0) + 1);
-                itr += len;
-                usedWords++;
-            }
-
-            if (usedWords == words.length) {
-                ans.add(idx);
+                
+                // Keep track of how many times this word occurs in the window
+                wordsFound.put(sub, wordsFound.getOrDefault(sub, 0) + 1);
+                if (wordsFound.get(sub) <= wordCount.get(sub)) {
+                    wordsUsed++;
+                } else {
+                    // Found too many instances already
+                    excessWord = true;
+                }
+                
+                if (wordsUsed == k && !excessWord) {
+                    // Found a valid substring
+                    answer.add(left);
+                }
             }
         }
-
-        return ans;
+    }
+    
+    public List<Integer> findSubstring(String s, String[] words) {
+        n = s.length();
+        k = words.length;
+        wordLength = words[0].length();
+        substringSize = wordLength * k;
+        
+        for (String word : words) {
+            wordCount.put(word, wordCount.getOrDefault(word, 0) + 1);
+        }
+        
+        List<Integer> answer = new ArrayList<>();
+        for (int i = 0; i < wordLength; i++) {
+            slidingWindow(i, s, answer);
+        }
+        
+        return answer;
     }
 }
