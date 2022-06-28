@@ -1,45 +1,48 @@
 class Solution {
     public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
-        HashMap<String, ArrayList<String>> graph = new HashMap<>();
-        for(int i = 0; i < recipes.length; i++){
-            for(String st: ingredients.get(i)){
-                ArrayList<String> elem = graph.getOrDefault(st, new ArrayList<>());
-                elem.add(recipes[i]);
-                graph.put(st, elem);
-            }
-            
-        }
-    
-        HashMap<String, Integer> incoming = new HashMap<>();
-        for(int i = 0; i < recipes.length; i++){
-            incoming.put(recipes[i], ingredients.get(i).size());
-        }
-
-        Queue<String> q = new LinkedList<>();
-        HashSet<String> checker = new HashSet<>();
-        for(String st : supplies) checker.add(st);
-        for(int i = 0; i < ingredients.size(); i++){
-            for(String st : ingredients.get(i)){
-                if(checker.contains(st) && !q.contains(st)) q.add(st);
-                
-            } 
-        }
-                
-        List<String> ans = new ArrayList<>();
-        while(!q.isEmpty()){
-            String curr = q.poll();
-            
-                for(String st : graph.get(curr)){
-                    incoming.put(st, incoming.get(st) - 1);
-                    if(incoming.get(st) == 0){
-                        if(graph.containsKey(st)){
-                            q.add(st);
-                        }
-                        ans.add(st);
-                    }
-                } 
-            }
+        HashSet<String> sup = new HashSet<>();
+        for(String s : supplies) sup.add(s);
         
-        return ans;  
+        HashMap<String, List<String>> graph = new HashMap<>();
+        HashMap<String, Integer> dep = new HashMap<>();
+        Queue<String> queue = new LinkedList<>();
+        List<String> ans = new ArrayList<>();
+
+        for(int idx = 0; idx < recipes.length; idx++){
+            boolean canAdd = true;
+            for(String ing : ingredients.get(idx)){
+                if(!sup.contains(ing)){
+                    canAdd = false;
+                    List<String> neg = graph.getOrDefault(ing, new ArrayList<>());
+                    neg.add(recipes[idx]);
+                    
+                    graph.put(ing, neg);
+                    dep.put(recipes[idx], dep.getOrDefault(recipes[idx], 0) + 1);
+                }               
+            }
+            
+            if(canAdd){
+                queue.add(recipes[idx]);
+            }
+        }
+        
+        
+        while(!queue.isEmpty()){
+            String r = queue.poll();
+            ans.add(r);
+            
+            for(String neg : graph.getOrDefault(r, new ArrayList<>())){
+                int count = dep.get(neg);
+                
+                if(count == 1){
+                    queue.add(neg);
+                }else{
+                    dep.put(neg, count - 1);
+                }
+            }
+        }
+        
+        
+        return ans;
     }
 }
