@@ -1,45 +1,42 @@
 class Solution {
-    private HashMap<String, Integer> wordCount = new HashMap<String, Integer>();
-    private int wordLength;
-    private int substringSize;
-    private int k;
-    
-    private boolean check(int i, String s) {
-        // Copy the original dictionary to use for this index
-        HashMap<String, Integer> remaining = new HashMap<>(wordCount);
-        int wordsUsed = 0;
-        
-        // Each iteration will check for a match in words
-        for (int j = i; j < i + substringSize; j += wordLength) {
-            String sub = s.substring(j, j + wordLength);
-            if (remaining.getOrDefault(sub, 0) != 0) {
-                remaining.put(sub, remaining.get(sub) - 1);
-                wordsUsed++;
-            } else {
-                break;
-            }
-        }
-        
-        return wordsUsed == k;
-    }
-    
     public List<Integer> findSubstring(String s, String[] words) {
-        int n = s.length();
-        k = words.length;
-        wordLength = words[0].length();
-        substringSize = wordLength * k;
-        
+        HashMap<String, Integer> map = new HashMap<>();
         for (String word : words) {
-            wordCount.put(word, wordCount.getOrDefault(word, 0) + 1);
+            map.put(word, map.getOrDefault(word, 0) + 1);
         }
-        
-        List<Integer> answer = new ArrayList<>();
-        for (int i = 0; i < n - substringSize + 1; i++) {
-            if (check(i, s)) {
-                answer.add(i);
+
+        HashMap<Integer, String> wordFromIdx = new HashMap<>();
+        int len = words[0].length();
+        for (int idx = 0; idx + len <= s.length(); idx++) {
+            String maybe = s.substring(idx, idx + len);
+            if (map.containsKey(maybe)) {
+                wordFromIdx.put(idx, maybe);
             }
         }
+
+        List<Integer> ans = new ArrayList<>();
+        int windowLen = len * words.length;
         
-        return answer;
+        for (int idx = 0; idx + windowLen <= s.length(); idx++) {
+            HashMap<String, Integer> _map = new HashMap<>();
+            int itr = idx, usedWords = 0;
+
+            while (itr + len <= s.length()) {
+                String maybe = wordFromIdx.getOrDefault(itr, "");
+                if (_map.getOrDefault(maybe, 0) >= map.getOrDefault(maybe, 0)) {
+                    break;
+                }
+
+                _map.put(maybe, _map.getOrDefault(maybe, 0) + 1);
+                itr += len;
+                usedWords++;
+            }
+
+            if (usedWords == words.length) {
+                ans.add(idx);
+            }
+        }
+
+        return ans;
     }
 }
