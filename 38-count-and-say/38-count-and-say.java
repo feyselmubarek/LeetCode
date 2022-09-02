@@ -17,10 +17,8 @@ class Solution {
                 }
                 count++;
             }
-            if(count > 0){
-                hold.append(count);
-                hold.append(last);
-            }
+            hold.append(count);
+            hold.append(last);
             bl = hold;            
         }
         
