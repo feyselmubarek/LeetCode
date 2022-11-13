@@ -8,17 +8,14 @@ class Solution {
         int minsBit = turnedOn;
         
         while(hrsBit <= turnedOn){
-            List<String> possibleHrs = new ArrayList<>();
-            dfsHrs(hrs, 0, 0, hrsBit, possibleHrs);
+            List<Integer> possibleHrs = new ArrayList<>();
+            dfs(hrs, 0, 0, hrsBit, possibleHrs, 11);
+            List<Integer> possibleMins = new ArrayList<>();
+            dfs(mins, 0, 0, minsBit, possibleMins, 59);
             
-            List<String> possibleMins = new ArrayList<>();
-            dfsMin(mins, 0, 0, minsBit, possibleMins);
-            
-            for(String h : possibleHrs){
-                for(String m : possibleMins){
-                    String hour = h.split(":")[0];
-                    String minute = m.split(":")[1];
-                    ans.add(hour + ":" + minute);
+            for(Integer h : possibleHrs){
+                for(Integer m : possibleMins){
+                    ans.add(h + ":" + pad(m));
                 }
             }
             
@@ -29,59 +26,24 @@ class Solution {
         return ans;
     }
     
-    public void dfsMin(int[] bits, int i, int time, int count, List<String> ans){
-        if(count == 0 && time <= 59){
-            ans.add("00:"+ pad(time));
+    public void dfs(int[] bits, int i, int time, int count, List<Integer> ans, int limit){
+        if(count == 0 && time <= limit){
+            ans.add(time);
             return;
         }
         
-        if(i >= bits.length || time > 59){
+        if(i >= bits.length || time > limit){
             return;
         }
         
-        // included
-        dfsMin(bits, i + 1, time + bits[i], count - 1, ans);
-        // exclueded
-        dfsMin(bits, i + 1, time, count, ans);
-    }
-    
-    public void dfsHrs(int[] bits, int i, int time, int count, List<String> ans){
-        if(count == 0 && time <= 11){
-            ans.add(time + ":00");
-            return;
-        }
-        
-        if(i >= bits.length || time > 11){
-            return;
-        }
-        
-        // included
-        dfsHrs(bits, i + 1, time + bits[i], count - 1, ans);
-        // exclueded
-        dfsHrs(bits, i + 1, time, count, ans);
+        dfs(bits, i + 1, time + bits[i], count - 1, ans, limit);
+        dfs(bits, i + 1, time, count, ans, limit);
     }
     
     public String pad(int num){
         return num > 9 ? num + "" : "0" + num;
     }
 }
-
-/*
-totalBit = 5;
-hrsBit = 5;
-minBit = 0;
-
-bits = [1,2,4,8,16,32]
-bit = 3
-                 
-                 f(0),[](3)
-               + /                         \ -
-            f(1)[1](2)                       f(1)[](3)
-            + /      -\                       + /
-      f(2)[1,2](1)    f(2)[1](2)            f(2)[2]
-
-
-*/
 
 
 
