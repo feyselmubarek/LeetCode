@@ -1,17 +1,17 @@
 class StockSpanner {
-    Stack<Pair> stack;
+    Stack<int[]> stack;
     public StockSpanner() {
         stack = new Stack<>();
     }
     
     public int next(int price) {
         int days = 1;
-        while(!stack.isEmpty() && stack.peek().price <= price){
-            days += stack.peek().day;
+        while(!stack.isEmpty() && stack.peek()[1] <= price){
+            days += stack.peek()[0];
             stack.pop();
         }
         
-        stack.push(new Pair(days, price));
+        stack.push(new int[]{days, price});
         return days;
     }
 }
@@ -21,10 +21,3 @@ class StockSpanner {
  * StockSpanner obj = new StockSpanner();
  * int param_1 = obj.next(price);
  */
-class Pair{
-    int day, price;
-    Pair(int day, int price){
-        this.day = day;
-        this.price = price;
-    }
-}
