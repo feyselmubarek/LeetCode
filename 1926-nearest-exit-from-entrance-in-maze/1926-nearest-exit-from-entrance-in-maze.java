@@ -22,14 +22,13 @@ class Solution {
                         if(ans != 0){
                             return ans;                            
                         }
-                    }else{
-                        if(maze[newR][newC] == '.' && !visited.contains(newR + "," + newC)){
-                            cur.add(new int[] {newR, newC});
-                            visited.add(newR + "," + newC);  
-                        }   
+                    }else if(maze[newR][newC] == '.' && !visited.contains(newR + "," + newC)){
+                        cur.add(new int[] {newR, newC});
+                        visited.add(newR + "," + newC);    
                     }                
                 }
             }
+            
             ans++;
         }
         
