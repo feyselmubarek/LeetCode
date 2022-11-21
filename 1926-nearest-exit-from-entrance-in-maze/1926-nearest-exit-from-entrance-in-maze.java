@@ -1,41 +1,43 @@
 class Solution {
     public int nearestExit(char[][] maze, int[] entrance) {
-        LinkedList<int[]> q = new LinkedList<>();
-        int n = maze.length, m = maze[0].length;
-        boolean[][] seen = new boolean[n][m];
+        int[][] dir = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
         
-        q.add(entrance);
-        seen[entrance[0]][entrance[1]] = true;
+        int n = maze.length;
+        int m = maze[0].length;
         
-        int level = 0;
-        int[][] directions = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
-        while(!q.isEmpty()){
-            int size = q.size();
+        Queue<int[]> cur = new LinkedList<>();
+        HashSet<String> visited = new HashSet<>();
+        cur.add(entrance);
+        visited.add(entrance[0] + "," + entrance[1]);  
+        
+        int ans = 0;
+        while(!cur.isEmpty()){
+            int size = cur.size();
             for(int i = 0; i < size; i++){
-                int[] curr = q.poll();
-                if(isEnd(curr, n, m) && level != 0){
-                    return level;
-                }
-                
-                for(int[] direct: directions){
-                    int r = curr[0] + direct[0];
-                    int c = curr[1] + direct[1];
-                    
-                    if(r < 0 || r >= n || c < 0 || c >= m || seen[r][c] || maze[r][c] == '+'){
-                        continue;
-                    }
-                    
-                    q.add(new int[]{r, c});
-                    seen[r][c] = true;
+                int[] polled = cur.poll();
+                for(int j = 0; j < 4; j++){
+                    int newR = polled[0] + dir[j][0];
+                    int newC = polled[1] + dir[j][1];
+                    if(isOutB(newC, newR, n, m)){
+                        if(ans != 0){
+                            return ans;                            
+                        }
+                    }else{
+                        if(maze[newR][newC] == '.' && !visited.contains(newR + "," + newC)){
+                            cur.add(new int[] {newR, newC});
+                            visited.add(newR + "," + newC);  
+                        }   
+                    }                
                 }
             }
-            level++;
+            ans++;
         }
         
         return -1;
+        
     }
     
-    public boolean isEnd(int[] p, int n, int m){
-        return p[0] == 0 || p[0] == n - 1 || p[1] == 0 || p[1] == m - 1;
+   boolean isOutB(int c, int r,int n, int m){
+        return c < 0 || r >= n || r < 0 || c >= m;
     }
 }
