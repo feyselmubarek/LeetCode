@@ -17,7 +17,6 @@ class Solution {
             map.put(diff, map.getOrDefault(diff, 0) + 1);
         }
         
-        // System.out.println(map);
         int count = 0;
         l = g = 0;
         for(int i = idx; i < nums.length; i++){
