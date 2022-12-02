@@ -17,29 +17,15 @@ class Solution {
             }
         }
         
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for(int count : counts){
-            if(count != 0){
-                map.put(count, map.getOrDefault(count, 0) + 1);
-            }
-        }        
+        Arrays.sort(counts);
+        Arrays.sort(counts2);
         
-        for(int count : counts2){
-            if(count != 0){
-                if(!map.containsKey(count)){
-                    return false;
-                }
-                
-                int freq = map.get(count);
-                if(freq == 1){
-                    map.remove(count);
-                }else{
-                    map.put(count, freq - 1);
-                }
+        for(int i = 0; i < 26; i++){
+            if(counts[i] != counts2[i]){
+                return false;
             }
         }
 
-        
-        return map.isEmpty();
+        return true;
     }
 }
