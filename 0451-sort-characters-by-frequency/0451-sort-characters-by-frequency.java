@@ -1,36 +1,37 @@
 class Solution {
     public String frequencySort(String s) {
-        HashMap<Character, Integer> map = new HashMap<>();
-        
-        for(int i = 0; i < s.length(); i++){
-            int occ = 1;
-            if(map.containsKey(s.charAt(i))){
-                occ += map.get(s.charAt(i));
-            }
-            map.put(s.charAt(i), occ);
+        Map<Character, Integer> map = new HashMap<>();
+        for(int i =0; i < s.length(); i++){
+            char c = s.charAt(i);
+            int fq = map.getOrDefault(c, 0) + 1;
+            map.put(c, fq);
         }
-        
-        List<Character>[] buckets = new ArrayList[s.length() + 1];
-        for(char c : map.keySet()){
-            int occ = map.get(c);
-            
-            if(buckets[occ] == null){
-                buckets[occ] = new ArrayList<>();
-            }
-            buckets[occ].add(c);
+        Queue<Char> pq = new PriorityQueue<>((a,b)->b.freq - a.freq);
+        for(Map.Entry<Character, Integer> entry: map.entrySet()){
+            char key = entry.getKey();
+            int val = entry.getValue();
+            Char ch = new Char(val, key);
+            pq.add(ch);
         }
-        
-        StringBuilder builder = new StringBuilder();
-        for(int i = buckets.length - 1; i >= 0; i--){
-            if(buckets[i] != null){
-                for(char c : buckets[i]){
-                    for(int j = 0; j < map.get(c); j++){
-                        builder.append(c);
-                    }    
-                }
-            }
+        StringBuilder sb = new StringBuilder();
+        while(!pq.isEmpty()){
+            Char temp = pq.poll();
+            String st = temp.c +"";
+            sb.append(st.repeat(temp.freq));
+               
         }
-        
-        return builder.toString();
+        return sb.toString();
     }
+     class Char{
+         int freq;
+         char c;
+         public Char(int freq, char c){
+             this.freq = freq;
+             this.c = c;
+         }
+     } 
 }
+
+//5  : 44
+//5: 48
+//6 : 3
