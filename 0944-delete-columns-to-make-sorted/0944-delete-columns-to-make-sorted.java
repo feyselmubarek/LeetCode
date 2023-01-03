@@ -1,28 +1,15 @@
 class Solution {
-    public int minDeletionSize(String[] A) {
-        if(A.length == 0){
-            return 0;
-        }
-        
-        String holder = A[0];
-        boolean[] isDeleted = new boolean[A[0].length()];
-        int removal = 0;
-        
-        for(int i = 1; i < A.length; i++){
-            String current = A[i];
-            
-            for(int j = 0; j < current.length(); j++){
-                if(!isDeleted[j]){
-                    if(current.charAt(j) < holder.charAt(j)){
-                        isDeleted[j] = true;
-                        removal++;
-                    }
+    public int minDeletionSize(String[] strs) {
+        int ans = 0;
+        for(int c = 0; c < strs[0].length(); c++){
+            for(int i = 0; i < strs.length - 1; i++){
+                if(strs[i].charAt(c) > strs[i + 1].charAt(c)){
+                    ans++;
+                    break;
                 }
             }
             
-            holder = current;
         }
-        
-        return removal;
+        return ans;
     }
 }
