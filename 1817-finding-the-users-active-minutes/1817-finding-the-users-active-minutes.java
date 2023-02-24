@@ -1,7 +1,7 @@
 class Solution {
     public int[] findingUsersActiveMinutes(int[][] logs, int k) {
        int[] result = new int[k];
-        Map<Integer, Set<Integer>> map = new HashMap<>();
+        HashMap<Integer, Set<Integer>> map = new HashMap<>();
         
         for(int[] log : logs)
         {
