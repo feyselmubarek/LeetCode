@@ -1,0 +1,17 @@
+class Solution {
+    public double trimMean(int[] arr) {
+        int n = arr.length, offset = n / 20;
+        double sum = 0;
+        
+        if(n == 0){
+            return sum;
+        }
+        
+        Arrays.sort(arr);
+        for(int i = offset; i < n - offset; i++){
+            sum += arr[i];
+        }
+        
+        return sum / (n - (2 * offset));
+    }
+}
